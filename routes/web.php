@@ -14,5 +14,15 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('patient-registration');
 });
+
+use App\Http\Controllers\PatientController;
+
+Route::post('/patients', [PatientController::class, 'store'])->name('patients.store');
+
+// Show the patient registration form
+Route::get('/patient-registration', [PatientController::class, 'showForm']);
+
+// Store patient data
+// Route::post('/patient-registration', [PatientController::class, 'store']);
