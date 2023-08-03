@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Patient;
-use Mail;
+use App\Mail\PatientRegistrationConfirmation;
+use Illuminate\Support\Facades\Mail;
 
 class PatientController extends Controller
 {
@@ -39,12 +40,9 @@ class PatientController extends Controller
 
         $patient = Patient::create($validatedData);
 
-        // Send confirmation email
-        $data = ['patient' => $patient];
-        Mail::send('emails.confirmation', $data, function ($message) use ($patient) {
-            $message->to($patient->email, $patient->name)
-                ->subject('Patient Registration Confirmation');
-        });
+        // Send the confirmation email
+        Mail::to($request->email)->send(new PatientRegistrationConfirmation($request->name));
+
 
         return redirect()->back()->with('success', 'Patient registered successfully.');
     }
